@@ -13,6 +13,8 @@ function PostCreate() {
     });
 
     setTitle('');
+
+    window.location.reload();
   };
   return (
     <div>
