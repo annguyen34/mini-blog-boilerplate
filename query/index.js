@@ -9,7 +9,11 @@ app.use(cors());
 
 const posts = {};
 
-app.post('/posts', async (req, res) => {
+app.get('/posts', (req, res) => {
+  res.send(posts);
+});
+
+app.post('/events', async (req, res) => {
   const { type, data } = req.body;
   if (type === 'PostCreated') {
     const { id, title } = data;
@@ -28,7 +32,8 @@ app.post('/posts', async (req, res) => {
 });
 
 app.get('/events', (req, res) => {
-  res.send(posts);
+  console.log('Received Event', req.body.type);
+  res.send({});
 });
 
 app.listen(4002, () => {
