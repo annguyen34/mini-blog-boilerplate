@@ -29,6 +29,7 @@ app.post('/posts/:id/comments', (req, res) => {
       id,
       content,
       postId: req.params.id,
+      status: 'pending',
     },
   });
 
@@ -37,6 +38,26 @@ app.post('/posts/:id/comments', (req, res) => {
 
 app.post('/events', (req, res) => {
   console.log('Received Event', req.body.type);
+  if (req.body.type === 'CommentModerated') {
+    const { postId, id, status, content } = req.body.data;
+    // Find comments by postId
+    const comments = commentsByPostId[postId];
+    // Find the comment by id
+    const comment = comments.find((comment) => comment.id === id);
+    // Update the status
+    comment.status = status;
+
+    axios.post('http://localhost:4005/events', {
+      type: 'CommentUpdated',
+      data: {
+        id,
+        status,
+        postId,
+        content,
+      },
+    });
+  }
+
   res.send({});
 });
 
